@@ -1,0 +1,23 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Dependencies and generated application output
+node_modules/
+dist/
+coverage/
+*.log
+
+# Local database data and editor/OS state
+postgres-data/
+.DS_Store
+.idea/
+.vscode/
+
+# AI working area: only its directory markers are shared
+.scratch/*
+!.scratch/tmp/
+!.scratch/tmp/.gitkeep
+!.scratch/plan/
+!.scratch/plan/.gitkeep
