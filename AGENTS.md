@@ -29,6 +29,10 @@ Execute all workflows within these strict boundaries:
   project source or documentation, read every Markdown file directly in
   `srcs/md/`. Treat those documents as the current architectural record and
   reconcile proposed work with them.
+* Before completing a change that affects architecture, scope, gameplay, the
+  stack, protocols, or deployment, search for `DOC_SYNC` and update every
+  affected marked document. Do not update unrelated documents merely to remove
+  the marker.
 * `.scratch/tmp/` & `.scratch/plan/`: Stage all AI conversations, planning, and raw generated code here.
 * Maintain concise, sanitized, batched logs of every AI/user and AI-agent discussion in `.scratch/tmp/`. Do not record secrets, credentials, tokens, cookies, private URLs, or personal data. Prefer automated or end-of-session logging; do not spend a separate tool call on every message solely to update a log. Keep logs disposable and out of final source directories.
 * `srcs/md/`: Save finalized architectural decisions, data models, and specs here to maintain locality.

@@ -1,5 +1,7 @@
 # Architecture Baseline
 
+<!-- DOC_SYNC: Review after changes to accepted architecture, stack, gameplay, protocols, deployment, or directory ownership. -->
+
 **Status:** accepted for the Cube Challenge Multiplayer first vertical slice,
 2026-10-22.
 

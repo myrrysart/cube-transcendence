@@ -1,5 +1,7 @@
 # Project Transcendence — Cube Challenge Multiplayer
 
+<!-- DOC_SYNC: Review after changes to project scope, architecture, gameplay, stack, protocols, deployment, or directory ownership. -->
+
 ## 1. Project vision
 
 Cube Challenge Multiplayer turns a short perspective-drawing drill into a

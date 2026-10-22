@@ -1,5 +1,7 @@
 # Project Transcendence — Cube Challenge Multiplayer
 
+<!-- DOC_SYNC: Review after changes to project scope, architecture, gameplay, stack, deployment, or documentation locations. -->
+
 *This project has been created as part of the 42 curriculum by jyniemit.*
 
 > **Repository baseline:** the architecture and development database are set up;
@@ -31,6 +33,13 @@ game state small and reliable.
 
 See [`srcs/md/architecture-baseline.md`](srcs/md/architecture-baseline.md) for
 accepted decisions and intentionally deferred details.
+
+## Architecture documentation
+
+- [`srcs/md/project_overview.md`](srcs/md/project_overview.md): product scope,
+  game flow, and first vertical slice.
+- [`srcs/md/architecture-baseline.md`](srcs/md/architecture-baseline.md):
+  accepted technical decisions and protocol boundaries.
 
 ## Getting started
 
@@ -117,8 +126,9 @@ complete their placeholders and expose both as accessible frontend pages.
 
 - Official course subject and evaluation sheet (authoritative);
 - Cube Challenge by daromeon, as gameplay inspiration only;
-- NestJS, Prisma, React, Tailwind CSS, PostgreSQL, Docker, Caddy, and
-  Emscripten documentation as implementation begins.
+- NestJS, Prisma, React, Tailwind CSS, PostgreSQL, Docker, Caddy, and browser
+  Canvas, Pointer Events, and Keyboard Events documentation as implementation
+  begins.
 
 AI assistance has been used for planning and this repository baseline. Every
 team member remains responsible for reading, understanding, testing, and
