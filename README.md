@@ -1,4 +1,4 @@
-# Project Transcendence — Infinite Canvas & Cube Challenge
+# Project Transcendence — Cube Challenge Multiplayer
 
 *This project has been created as part of the 42 curriculum by jyniemit.*
 
@@ -8,22 +8,29 @@
 
 ## Goal
 
-Project Transcendence will be a multi-user collaborative infinite canvas with
-an embedded perspective-drawing game, Cube Challenge. The backend will own
-authoritative shared/game state; clients render the UI and submit intent.
+Cube Challenge Multiplayer is a perspective-drawing game. A player sees one
+face of a cube and freehand-draws the remaining structure. They can practise
+alone or compete in a synchronized room of **3–10 players**. In a multiplayer
+round, everyone receives the same challenge at the same server-controlled time,
+draws on a private canvas, and receives an authoritative ranked result when the
+round ends.
+
+The game deliberately does not use a shared live canvas: simultaneous players
+compete on equivalent private attempts, preventing copying while keeping the
+game state small and reliable.
 
 ## Stack
 
 | Layer | Selected technology | Reason |
 | --- | --- | --- |
-| Frontend | React, TypeScript, Tailwind CSS | Qualifying frontend framework. |
-| Backend | NestJS, TypeScript | Clear modules, validation, and real-time boundaries. |
-| Data | PostgreSQL + Prisma | Relations, migrations, and concurrent persistence. |
-| Core | C++ compiled to WebAssembly | Deterministic engine work near browser rendering. |
+| Frontend | React, TypeScript, Tailwind CSS | Qualifying frontend framework and browser drawing UI. |
+| Backend | NestJS, TypeScript | Validation, authentication, room lifecycle, and WebSocket boundaries. |
+| Data | PostgreSQL + Prisma | Clear relations, migrations, and concurrent persistence. |
+| Core | C++ compiled to WebAssembly | Reserved for a measured, deterministic game-core need; not required for the first playable slice. |
 | Deployment | Docker Compose, then Caddy HTTPS | Reproducible containers and HTTPS/WSS. |
 
 See [`srcs/md/architecture-baseline.md`](srcs/md/architecture-baseline.md) for
-the decisions and intentionally deferred details.
+accepted decisions and intentionally deferred details.
 
 ## Getting started
 
@@ -31,8 +38,8 @@ the decisions and intentionally deferred details.
 
 - Docker Engine with the Compose plugin;
 - Git;
-- later: Node.js and a C++/Wasm toolchain, with versions set by the owning
-  implementation tasks.
+- later: Node.js and any implementation toolchains, with versions set by their
+  owning tasks.
 
 ### Development database
 
@@ -68,20 +75,37 @@ constraints, and migrations for at least:
 
 ```text
 User ──< Session
-User ──< Canvas ──< CanvasObject
-User ──< Match >── User
+User ──< RoomParticipant >── Room ──< Round
+Round ──< Submission ──> User
+Round ──> Challenge
 ```
+
+`RoomParticipant` records membership and connection state. Each `Submission`
+contains one player's freehand attempt and its server-calculated score; a unique
+constraint must allow at most one final submission per player per round.
 
 The database owner must promote the finalized schema specification to
 `srcs/md/` before implementing its Prisma migration.
 
+## Planned gameplay
+
+- Solo practice: complete one cube, submit, and review score and perspective
+  guides.
+- Multiplayer: create or join a room of 3–10 players; the server synchronizes
+  the round timer and assigns the same challenge to every player.
+- Freehand drawing: draw only the missing cube edges with pointer, mouse, or
+  stylus input.
+- Result: server-side validation and scoring produces a ranked result, with a
+  clear winner, tie, or loss state.
+
+The first scope excludes a general art workspace, shared live strokes, chat,
+matchmaking, rankings across matches, and extra game modes.
+
 ## Features and module claims
 
-Planned features include a shared canvas, accounts, Cube Challenge, real-time
-synchronization, and durable history. Contributors and module points are
 <!-- HUMAN_CHECK: README_MODULES — verify each claim against the official rubric. -->
-Only list modules once they are implemented, tested, and demonstrable;
-the current total is **0 points**.
+Contributors and module points will be listed only after they are implemented,
+tested, and demonstrable; the current total is **0 points**.
 
 ## Legal pages
 
@@ -92,6 +116,7 @@ complete their placeholders and expose both as accessible frontend pages.
 ## Resources and AI use
 
 - Official course subject and evaluation sheet (authoritative);
+- Cube Challenge by daromeon, as gameplay inspiration only;
 - NestJS, Prisma, React, Tailwind CSS, PostgreSQL, Docker, Caddy, and
   Emscripten documentation as implementation begins.
 

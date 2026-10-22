@@ -3,9 +3,9 @@
 <!-- HUMAN_CHECK: TERMS_EFFECTIVE_DATE — set at release. -->
 **Effective date:** <YYYY-MM-DD>
 
-These terms govern use of Project Transcendence, a collaborative drawing and
-game application. This draft must be published as an in-app page and completed
-with the team contact before release.
+These terms govern use of Project Transcendence, a perspective-drawing game
+with solo practice and private multiplayer rooms. This draft must be published
+as an in-app page and completed with the team contact before release.
 
 ## Accounts and acceptable use
 
@@ -16,10 +16,11 @@ access.
 
 ## User content
 
-Users retain responsibility for drawings, messages, profile material, and
-other content they submit. By submitting it, users grant the service the
-limited permission needed to store, display, synchronize, and moderate it for
-other users as the feature requires.
+Users retain responsibility for freehand drawings, profile material, and other
+content they submit. By submitting it, users grant the service the limited
+permission needed to store, score, display results for, and moderate it as the
+game requires. In multiplayer rounds, drawings remain private until the
+authoritative result is published.
 
 ## Availability and moderation
 

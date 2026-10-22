@@ -1,220 +1,82 @@
-# ft_transcendence — Considered Architecture Plans
+# Cube Challenge Multiplayer — Considered Plans
 
-> This document records the alternatives considered during planning, their trade-offs, and the current recommended direction. It is not a claim that any module has been implemented.
+> This document records the selected product boundary and rejected scope. It is
+> not a claim that any feature or module has been implemented.
 
-## 1. Goals and constraints
+## Product decision
 
-The team wants to learn:
+The first deliverable is a perspective-drawing game, not an art workspace.
+Each round presents one visible face of a cube. The player freehand-draws the
+missing structure, submits it, and receives a score plus perspective feedback.
 
-- C;
-- WebAssembly;
-- htmx;
-- real-time networking/game architecture;
-- SQL persistence and deployment.
+The game works in two modes:
 
-At the same time, the project must remain defensible against the supplied rubric: frontend, backend, database, HTTPS, multi-user operation, a one-command containerized deployment, and 14 validated module points.
+- **Solo practice:** one player completes and reviews one challenge.
+- **Multiplayer room:** 3–10 players join a private room, receive the same
+  challenge at the same server-owned start time, draw simultaneously on
+  separate private canvases, and receive a ranked result at round end.
 
-The guiding rule is:
+This follows the learning loop of daromeon’s Cube Challenge as gameplay
+inspiration only. It does not reuse its code, assets, or presentation.
 
-> Use unfamiliar technology where it creates learning value, but do not make an immature or browser-incompatible technology the only path to a passing project.
-
-## 2. Terminology: the responsibilities must not overlap
-
-| Concern | Correct owner |
-| --- | --- |
-| Semantic pages, forms, accessibility | Server-rendered HTML and templates |
-| Partial page updates | htmx |
-| Game drawing and local input | C/WASM attached to a `<canvas>` |
-| Browser-compatible live transport | `wss://` WebSocket or Socket.IO |
-| Canonical score, state, rules, and winner | Server-authoritative game service |
-| Accounts, permissions, friends, matches, tournaments | Backend application |
-| Durable data | Relational database |
-| TLS termination/routing | Caddy or equivalent reverse proxy |
-
-htmx is appropriate for human-speed interactions such as a profile edit. It is not the game loop. A game should not send high-frequency paddle movement as HTML fragments.
-
-## 3. Rejected or deferred approaches
-
-### 3.1 GameNetworkingSockets as browser transport — rejected for the critical path
-
-Valve GameNetworkingSockets is a native, UDP/ICE/relay-oriented transport. A browser cannot expose arbitrary native TCP/UDP sockets simply because code was compiled to WASM. A WebSocket client cannot directly connect to a GameNetworkingSockets listener.
-
-**Decision:** browser clients use WSS. GameNetworkingSockets may later be explored for a native bot/client or a non-critical experiment, but must not block the web game.
-
-References:
-
-- [GameNetworkingSockets](https://github.com/ValveSoftware/GameNetworkingSockets)
-- [Emscripten networking constraints](https://emscripten.org/docs/porting/networking.html)
-
-### 3.2 WASIX as the browser game runtime — deferred
-
-WASIX is valuable for running POSIX-like software under Wasmer. It is not the low-risk choice for a browser canvas game:
-
-- it requires a Wasmer runtime layer rather than direct standard browser WASM instantiation;
-- its browser path adds workers, cross-origin isolation, and potentially a network proxy;
-- it does not offer Emscripten’s mature canvas, DOM, input, and WebSocket integration;
-- it does not bypass browser socket restrictions.
-
-**Decision:** use Emscripten for the browser game. WASIX can be learned in a small independent tool/demo after the project path is stable.
-
-References:
-
-- [WASIX](https://wasix.org/docs/)
-- [Wasmer JavaScript runtime](https://docs.wasmer.io/runtime/js/)
-- [Emscripten HTML5 API](https://emscripten.org/docs/api_reference/html5.h.html)
-
-### 3.3 React plus htmx in the same main UI — rejected
-
-React and htmx both expect to own DOM updates. Mixing them across normal application pages creates two rendering models, more integration bugs, and little benefit.
-
-**Decision:** if htmx is selected, it owns the surrounding application pages. Keep any JavaScript around the WASM canvas small and isolated.
-
-## 4. Backend alternatives
-
-### Option A — NestJS + htmx + C/WASM
-
-**Shape:** NestJS renders HTML/templates or htmx fragments; it manages sessions, database access, WebSockets, and game rooms. C is compiled to WASM for the game core.
-
-**Strengths**
-
-- Lowest infrastructure risk.
-- NestJS clearly qualifies as a backend framework.
-- Strong validation, authentication, module boundaries, and WebSocket support.
-- Easy PostgreSQL ORM/migration path with Prisma.
-
-**Costs**
-
-- Requires TypeScript in addition to C.
-- Does not make the backend itself a C learning exercise.
-
-**Use when:** the priority is passing reliably while keeping C focused on the game.
-
-### Option B — Kore + htmx + native C game service
-
-**Shape:** Kore is the C HTTP/WebSocket backend. It serves htmx fragments, manages sessions and match rooms, talks to PostgreSQL, and can share native C game logic.
-
-**Strengths**
-
-- C-first, event-driven, security-conscious framework.
-- Built-in HTTP, WebSockets, TLS support, and PostgreSQL integration.
-- Strongest authentic “handmade C backend” option.
-
-**Costs**
-
-- Smaller ecosystem and more framework-specific learning.
-- The team must design more of the authentication, validation, migrations, templating, and testing infrastructure.
-- More time risk than NestJS.
-
-**Use when:** learning C backend engineering is more important than the lower-risk TypeScript option, and the team accepts the additional scope.
-
-References: [Kore](https://kore.io/) and [Kore source](https://github.com/jorisvink/kore).
-
-### Option C — Drogon + htmx + C game core
-
-**Shape:** Drogon provides the C++ application backend; the game core stays in C and is linked or exposed through a small adapter.
-
-**Strengths**
-
-- Mature application framework: routes, controllers, filters, sessions, templates, WebSockets, ORM, and relational database support.
-- Much lower web-plumbing risk than a C server library.
-- Clearly defensible as a backend framework.
-
-**Costs**
-
-- C++ rather than C for web application code.
-
-**Use when:** C++ is acceptable and the team wants a lower-level feel with a more complete framework than Kore.
-
-Reference: [Drogon](https://github.com/drogonframework/drogon).
-
-### Not recommended as the main backend
-
-| Technology | Reason |
-| --- | --- |
-| CivetWeb | Good embedded server, but too much application structure must be invented. |
-| Mongoose | Useful embedded networking, but GPL/commercial licensing and weak relational application tooling add risk. |
-| Onion | Less current ecosystem and weaker WebSocket/database story. |
-| Homemade HTTP server | Educational, but unsuitable as the critical path for authentication, HTTPS, WebSockets, validation, and project deadlines. |
-
-## 5. Database alternatives
-
-### SQLite
-
-SQLite is viable for a single application server if writes are short, WAL mode is enabled, prepared statements are used, and the database file is kept on a persistent local Docker volume. It is a useful learning choice.
-
-However, it allows one writer at a time. It is less convenient when chat, sessions, tournaments, and simultaneous game-result writes are all being built by a new team.
-
-### PostgreSQL — recommended for the main plan
-
-PostgreSQL is the conservative multi-user choice: mature concurrency behavior, good schema tooling, common hosting/deployment knowledge, and strong support from NestJS/Prisma, Kore, and Drogon.
-
-**Decision:** choose PostgreSQL for the evaluated application unless the team deliberately selects Kore/SQLite and fully understands the write/concurrency design.
-
-## 6. Current recommended plans
-
-Choose **one** before implementation. Do not combine plans casually.
-
-### Plan 1: Passing-first, htmx retained
+## Selected architecture
 
 ```text
-Browser
-├── semantic HTML templates + htmx + Tailwind CSS
-├── C/WASM game module compiled with Emscripten
-└── small JS WebSocket/canvas adapter
-              │ HTTPS / WSS
-Caddy reverse proxy
-              │
-NestJS application
-├── HTML/htmx routes and server-side validation
-├── secure sessions, authorization, rate limits
-├── Socket.IO/WebSocket rooms, matchmaking, reconnection
-├── authoritative game orchestration
-└── Prisma migrations and repositories
-              │
-PostgreSQL persistent volume
+React + TypeScript + Tailwind browser client
+├── lobby, private drawing surface, feedback, results
+└── HTTPS / WSS
+             │
+        Caddy reverse proxy
+             │
+        NestJS application
+        ├── authentication and validation
+        ├── room and round lifecycle
+        ├── WebSocket presence/state notifications
+        ├── authoritative scoring and ranking
+        └── Prisma persistence
+             │
+        PostgreSQL
 ```
 
-Claim backend-framework and ORM modules only; do not claim a frontend-framework module for htmx. Keep C/WASM as the game-specific technical centerpiece.
+The initial scorer is deterministic TypeScript. C++/WebAssembly is an optional
+later decision, not a dependency of the playable game.
 
-### Plan 2: C-first, higher learning risk
+## Room and round protocol
 
-```text
-Browser: HTML + htmx + Tailwind + Emscripten C/WASM + WSS adapter
-              │
-Caddy
-              │
-Kore C application: routes, sessions, WebSockets, match rooms, native C game core
-              │
-PostgreSQL
-```
+1. An authenticated player creates or joins a room.
+2. The server permits 3–10 room participants and tracks ready/disconnected
+   status.
+3. The server starts the round, assigns the challenge, and publishes absolute
+   start/end timestamps.
+4. Every client collects freehand points locally on its own canvas.
+5. A client submits one final drawing; timeout also closes the drawing phase.
+6. The server validates the submission, calculates its score, persists it, and
+   computes the final ranking after the round closes.
+7. The server publishes the result and feedback availability to every player.
 
-This is defensible if Kore is used as the actual structured backend framework, rather than merely embedding a server library. It requires a stricter early prototype: HTTPS, login, htmx fragment, WebSocket connection, and two-user game room must all work before optional modules are attempted.
+WebSockets carry presence and state changes, not live drawing points. This is
+both sufficient for simultaneous competition and lower risk than collaborative
+stroke synchronization.
 
-## 7. Module strategy when htmx is the frontend
+## Scope explicitly rejected for the first delivery
 
-Because htmx is not being claimed as a frontend framework, a game-centered plan can reach 14 points with:
+- infinite canvas, sector coordinates, paint simulation, colour mixing;
+- screenshot/reference import, kitbashing, layers, and general art tools;
+- live shared canvas, live cursors, or streamed strokes;
+- chat, friends, profiles beyond required scope, matchmaking, spectators, and
+  tournaments;
+- additional challenges or modes such as endless, daily, double-cube, or
+  persistent leaderboards;
+- C++/Wasm before the solo scoring loop and multiplayer round work end to end.
 
-| Module | Points | Minimum evidence |
-| --- | ---: | --- |
-| Backend framework | 1 | NestJS, Kore, or Drogon used as the actual backend architecture. |
-| ORM | 1 | A genuine ORM, not just raw SQL. This fits most naturally with NestJS + Prisma or Drogon ORM. |
-| Complete web game | 2 | Live user-vs-user game with clear rules/outcome. |
-| Remote players | 2 | Two computers, disconnect/reconnect behavior. |
-| User interaction | 2 | Basic persisted chat, profiles, friends. |
-| Standard user management | 2 | Profile editing, avatar/default avatar, friends, online status. |
-| AI opponent | 2 | Explainable, competent but imperfect opponent. |
-| Tournament | 1 | Registration, bracket/order, tracking/management. |
-| Game statistics/history | 1 | Persisted results, statistics/history, leaderboard/progression. |
-| **Total** | **14** | Every item must be demonstrated. |
+## First validation sequence
 
-Add a well-tested one-point buffer, such as game customization or spectator mode, before considering the score safe.
+1. Verify that a freehand solo attempt can be captured, scored, and explained
+   with perspective guides.
+2. Verify that three browsers receive the same challenge and start time.
+3. Verify that separate computers can finish a room, disconnect/reconnect, and
+   receive one consistent ranked result.
+4. Only then evaluate optional work against the official module checklist.
 
-## 8. Immediate architecture decisions to make
-
-1. Choose **Plan 1 (NestJS)** or **Plan 2 (Kore)**.
-2. Choose PostgreSQL unless the team intentionally accepts SQLite’s concurrency constraints.
-3. Define the C game-core API: initialization, input, fixed tick, state snapshot, reset, cleanup.
-4. Define the WebSocket message protocol: authenticate, join queue, match assigned, input, snapshot, disconnect, reconnect, match result.
-5. Create a thin vertical slice before feature work: Docker + HTTPS + signup/login + htmx fragment + database migration + offline WASM game + two-browser WebSocket room.
-
-No optional module should start before this slice works end-to-end.
+The official subject and evaluation checklist remains authoritative over this
+planning document.

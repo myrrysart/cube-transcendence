@@ -3,16 +3,18 @@
 <!-- HUMAN_CHECK: PRIVACY_EFFECTIVE_DATE — set at release. -->
 **Effective date:** <YYYY-MM-DD>
 
-Project Transcendence is a collaborative drawing and game application. This
-draft becomes the in-app Privacy Policy only after the team completes the
-bracketed details and has reviewed its implementation against this text.
+Project Transcendence is a perspective-drawing game with solo practice and
+private multiplayer rooms. This draft becomes the in-app Privacy Policy only
+after the team completes the bracketed details and has reviewed its
+implementation against this text.
 
 ## Data we expect to process
 
 - account identifier and email address;
 - password hashes only, never plaintext passwords;
 - profile information and optional avatar;
-- canvas, game, friend, chat, and match data created by users;
+- room membership, game-round, freehand drawing submission, score, rank, and
+  match-history data created by users;
 - security and operational logs needed to operate and investigate abuse.
 
 ## Why we use it
@@ -35,7 +37,8 @@ requires it.
 
 Users may request access, correction, or deletion of their account data by
 contacting **<team-contact-email>**. The final application must state how
-account deletion affects shared canvases, chat records, and completed matches.
+account deletion affects private room submissions, scores, rankings, and
+completed matches.
 
 ## Security and changes
 
