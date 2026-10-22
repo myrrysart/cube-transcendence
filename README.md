@@ -28,7 +28,7 @@ game state small and reliable.
 | Frontend | React, TypeScript, Tailwind CSS | Qualifying frontend framework and browser drawing UI. |
 | Backend | NestJS, TypeScript | Validation, authentication, room lifecycle, and WebSocket boundaries. |
 | Data | PostgreSQL + Prisma | Clear relations, migrations, and concurrent persistence. |
-| Core | C++ compiled to WebAssembly | Reserved for a measured, deterministic game-core need; not required for the first playable slice. |
+| Game engine | TypeScript | Rules, challenge generation, stroke evaluation, and scoring; compiled to JavaScript for browser and server execution. |
 | Deployment | Docker Compose, then Caddy HTTPS | Reproducible containers and HTTPS/WSS. |
 
 See [`srcs/md/architecture-baseline.md`](srcs/md/architecture-baseline.md) for
