@@ -2,7 +2,6 @@
 
 - STATUS: OPEN
 - PRIORITY: 40
-- TAGS: deployment
+- TAGS: deployment ready
 
 No description.
-

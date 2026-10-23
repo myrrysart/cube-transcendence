@@ -2,6 +2,6 @@
 
 - STATUS: OPEN
 - PRIORITY: 100
-- TAGS: onboarding
+- TAGS: onboarding ready
 
 No description.

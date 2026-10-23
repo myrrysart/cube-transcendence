@@ -1,0 +1,26 @@
+# Onboarding-guide session log
+
+- User selected the Tatr and coding-agent how-to guides; they are handling the
+  Anki deck/guide separately.
+- Intended final location: `docs/onboarding/`.
+- Reviewed the current architecture records and local Tatr CLI help.
+- Researched the official Tatr workflow, including task status updates.
+- Drafted all onboarding guides except Anki in `.scratch/plan/`, pending human
+  review and promotion.
+- The project-management draft deliberately leaves team cadence, communication,
+  and review choices for the team to decide and document.
+- Expanded the Tatr draft with verified HUID extraction, exact-path lookup,
+  quoted query examples, and a caution that the installed CLI does not expose a
+  documented status-update command.
+- Updated the project rule: Tatr owns task creation, HUID directories, listing,
+  and queries; teammates may edit Markdown titles and bodies for standups and
+  task context while preserving metadata.
+- Added verified Bash/Zsh and Fish `topen` examples that search open and closed
+  task output and open every match in Vim tabs.
+- Established `tasks/tags` as the Tatr tag registry: one `ready`, `work`, or
+  `review` workflow tag per open task; `owner-<42-login>` for active/review
+  ownership; `kind-*` tags model Conventional Commit categories.
+- The installed Tatr binary has no `ls -update` support. Policy now permits
+  teammates to maintain existing task metadata while preserving its format;
+  current tasks were placed in `ready`, except the active Anki task in `work`
+  with `owner-jyniemit`.

@@ -1,0 +1,22 @@
+ready          Scoped and unblocked; safe to pick up.
+work           Actively being worked on by its owner.
+review         Implementation or document is ready for peer review.
+
+kind-feat      New user-visible capability.
+kind-fix       Correction to existing behaviour.
+kind-docs      Documentation, specification, or onboarding work.
+kind-refactor  Internal restructuring with no intended behaviour change.
+kind-test      Test or verification work.
+kind-build     Build, dependency, container, or tooling work.
+kind-chore     Necessary maintenance that fits no other kind.
+
+owner-jyry     login jyniemit Jyry.
+owner-antor    login achowdhu Antor.
+owner-joa      login jronnbla Jonathan.
+owner-asha	   TODO: add kood login for asha.
+
+onboarding     Teammate onboarding material and workflow.
+setup          Repository setup or team-setup work.
+architecture   Architecture or durable technical specification.
+vertical-slice First playable end-to-end game slice.
+deployment     Container or production-deployment work.

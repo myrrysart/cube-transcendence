@@ -63,7 +63,9 @@ the winner.
   within the frontend and backend applications.
 - `.scratch/tmp/` and `.scratch/plan/`: disposable planning and generated
   material; decisions require human review before promotion.
-- `tasks/`: task tracking managed only through `tatr`.
+- `tasks/`: Tatr creates, lists, and queries task records; teammates maintain
+  their Markdown title, body, and metadata for standups, blockers, decisions,
+  and workflow without moving or renaming Tatr HUID directories.
 - `setup/` and `build/`: Docker/Podman configuration.
 
 ## 5. First vertical slice

@@ -2,6 +2,6 @@
 
 - STATUS: OPEN
 - PRIORITY: 20
-- TAGS: architecture
+- TAGS: architecture ready
 
 No description.

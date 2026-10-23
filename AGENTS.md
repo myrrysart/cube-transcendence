@@ -37,5 +37,11 @@ Execute all workflows within these strict boundaries:
 * Maintain concise, sanitized, batched logs of every AI/user and AI-agent discussion in `.scratch/tmp/`. Do not record secrets, credentials, tokens, cookies, private URLs, or personal data. Prefer automated or end-of-session logging; do not spend a separate tool call on every message solely to update a log. Keep logs disposable and out of final source directories.
 * `srcs/md/`: Save finalized architectural decisions, data models, and specs here to maintain locality.
 * `srcs/frontend/`, `srcs/backend/`, `srcs/core/`: Final human-verified source code only.
-* `tasks/`: Task tracking files managed strictly via `tatr`.
+* `tasks/`: Create, list, and query task records with `tatr`; never rename or
+  move its HUID directories. Teammates may edit a task's Markdown title, body,
+  and metadata for scope, standup notes, blockers, decisions, and workflow.
+  Preserve Tatr metadata format and use supported Tatr commands where they
+  exist.
+  Open tasks use exactly one workflow tag from `tasks/tags` (`ready`, `work`,
+  or `review`); work and review tasks also have one `owner-<42-login>` tag.
 * `setup/` & `build/`: Docker/Podman containerization configurations.

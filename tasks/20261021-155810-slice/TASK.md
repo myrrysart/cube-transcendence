@@ -2,6 +2,6 @@
 
 - STATUS: OPEN
 - PRIORITY: 30
-- TAGS: vertical-slice
+- TAGS: vertical-slice ready
 
 No description.

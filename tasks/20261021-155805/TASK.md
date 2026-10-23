@@ -2,6 +2,6 @@
 
 - STATUS: OPEN
 - PRIORITY: 10
-- TAGS: setup
+- TAGS: setup ready
 
 No description.
