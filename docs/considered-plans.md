@@ -2,6 +2,7 @@
 
 > This document records the selected product boundary and rejected scope. It is
 > not a claim that any feature or module has been implemented.
+<!-- DOC_TODO: PLANS_PROMOTION_REVIEW — promote only team-reviewed decisions from this planning record into durable architecture documents. -->
 
 ## Product decision
 
@@ -12,7 +13,7 @@ missing structure, submits it, and receives a score plus perspective feedback.
 The game works in two modes:
 
 - **Solo practice:** one player completes and reviews one challenge.
-- **Multiplayer room:** 3–10 players join a private room, receive the same
+- **Multiplayer room:** 1–4 players join a private room, receive the same
   challenge at the same server-owned start time, draw simultaneously on
   separate private canvases, and receive a ranked result at round end.
 
@@ -38,13 +39,12 @@ React + TypeScript + Tailwind browser client
         PostgreSQL
 ```
 
-The initial scorer is deterministic TypeScript. C++/WebAssembly is an optional
-later decision, not a dependency of the playable game.
+The initial scorer is deterministic TypeScript.
 
 ## Room and round protocol
 
 1. An authenticated player creates or joins a room.
-2. The server permits 3–10 room participants and tracks ready/disconnected
+2. The server permits 1–4 room participants and tracks ready/disconnected
    status.
 3. The server starts the round, assigns the challenge, and publishes absolute
    start/end timestamps.
@@ -67,7 +67,6 @@ stroke synchronization.
   tournaments;
 - additional challenges or modes such as endless, daily, double-cube, or
   persistent leaderboards;
-- C++/Wasm before the solo scoring loop and multiplayer round work end to end.
 
 ## First validation sequence
 

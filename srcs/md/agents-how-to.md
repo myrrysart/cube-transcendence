@@ -1,5 +1,7 @@
 # Working with project coding agents — review draft
 
+<!-- DOC_TODO: AGENTS_GUIDE_REVIEW — finalize this review draft after the team confirms the agent workflow. -->
+
 Coding agents can accelerate research and routine edits. They do not own a
 decision or a commit: the teammate requesting the work remains responsible for
 understanding, reviewing, testing, and explaining it.
@@ -34,6 +36,14 @@ In particular:
   TypeScript, PostgreSQL/Prisma, and TypeScript game rules.
 - Search for `DOC_SYNC` before a change affecting architecture, scope,
   gameplay, stack, protocol, deployment, or directory ownership.
+
+## Documentation markers
+
+`DOC_SYNC` marks review triggers. `DOC_TODO` marks outstanding decisions or
+changeable details; every newly created or edited project document must use
+`<!-- DOC_TODO: <ID> — <specific unresolved item and resolution condition>. -->`
+for each such item, and remove or resolve it when finalized. `HUMAN_CHECK`
+marks human verification or replacement. Grep for `DOC_TODO` before review.
 
 ## Delegate deliberately
 

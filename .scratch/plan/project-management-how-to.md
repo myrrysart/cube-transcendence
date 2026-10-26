@@ -1,5 +1,7 @@
 # Project management — review draft
 
+<!-- DOC_TODO: SCRATCH_TEAM_PROCESS — agree and record cadence, communication, ownership, review, and decision-recording rules. -->
+
 Use this guide to keep the first vertical slice small, owned, and reviewable.
 The team still needs to agree its actual meeting cadence, communication channel,
 and review process; record those choices in the root `README.md` rather than

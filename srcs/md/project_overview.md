@@ -4,12 +4,14 @@
 
 ## 1. Project vision
 
+<!-- DOC_TODO: OVERVIEW_SCOPE_REVIEW — reconfirm gameplay scope and capacity after team review. -->
+
 Cube Challenge Multiplayer turns a short perspective-drawing drill into a
 game. Given one visible face of a cube, a player freehand-draws the missing
 structure, submits it, and receives perspective feedback and a score.
 
 - **Solo practice** is the smallest complete learning loop.
-- **Multiplayer** supports rooms of 3–10 simultaneous players. Every player
+- **Multiplayer** supports rooms of 1–4 simultaneous players. Every player
   receives the same prompt and server-controlled timer, but draws on a private
   canvas. The server calculates and publishes the ranked result.
 - The game has clear rules, a time limit, and a win/loss/tie result. It is not
@@ -28,8 +30,7 @@ artwork, or assets are reused.
 - **Database:** PostgreSQL with Prisma for relational user, room, round, and
   submission data.
 - **Game engine:** TypeScript implements all game rules, challenge generation,
-  stroke evaluation, and scoring. Browser and server code compile to JavaScript;
-  the project has no C++ or WebAssembly core.
+  stroke evaluation, and scoring. Browser and server code compile to JavaScript.
 
 The game uses browser pointer events for drawing and keyboard events for
 shortcuts and accessible controls. React owns application screens and static UI;
@@ -44,7 +45,7 @@ asset management.
 ## 3. Game flow
 
 1. A player chooses solo practice or creates/joins a multiplayer room.
-2. A multiplayer room starts only with 3–10 ready participants.
+2. A multiplayer room starts only with 1–4 ready participants.
 3. The server assigns one challenge and a start/end timestamp to every player.
 4. Each player freehand-draws the missing edges on their own canvas.
 5. At submission or timeout, the server validates and scores the attempt.
@@ -72,7 +73,7 @@ the winner.
 
 1. Render one challenge and collect freehand strokes in a solo browser flow.
 2. Submit strokes to a server-side deterministic scorer and show feedback.
-3. Add a 3–10-player room, ready state, synchronized timer, and private
+3. Add a 1–4-player room, ready state, synchronized timer, and private
    attempts.
 4. Persist final submissions and publish the ranked results.
 5. Test the complete flow on separate machines before optional features.

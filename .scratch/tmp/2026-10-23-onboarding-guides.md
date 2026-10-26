@@ -1,5 +1,13 @@
 # Onboarding-guide session log
 
+<!-- DOC_TODO: SCRATCH_GUIDE_PROMOTION — confirm which onboarding drafts are approved and promote them only after human review. -->
+
+- 2026-10-26: Requested a documentation-wide 1–4 player capacity standard and
+  a `DOC_TODO` convention for unresolved or changeable details; applied and
+  checked the affected documentation.
+- 2026-10-26: Removed deprecated game-engine alternatives from project
+  documentation and planning material.
+
 - User selected the Tatr and coding-agent how-to guides; they are handling the
   Anki deck/guide separately.
 - Intended final location: `docs/onboarding/`.

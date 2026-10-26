@@ -12,7 +12,7 @@
 
 Cube Challenge Multiplayer is a perspective-drawing game. A player sees one
 face of a cube and freehand-draws the remaining structure. They can practise
-alone or compete in a synchronized room of **3–10 players**. In a multiplayer
+alone or compete in a synchronized room of **1–4 players**. In a multiplayer
 round, everyone receives the same challenge at the same server-controlled time,
 draws on a private canvas, and receives an authoritative ranked result when the
 round ends.
@@ -49,6 +49,7 @@ accepted decisions and intentionally deferred details.
 - Git;
 - later: Node.js and any implementation toolchains, with versions set by their
   owning tasks.
+<!-- DOC_TODO: README_TOOLCHAIN_VERSIONS — set Node.js and implementation-toolchain versions when their owning tasks are accepted. -->
 
 ### Development database
 
@@ -64,6 +65,7 @@ Never commit `.env`; use `.env.example` as the safe template.
 ## Team and project management
 
 <!-- HUMAN_CHECK: README_TEAM — replace every placeholder before evaluation. -->
+<!-- DOC_TODO: README_TEAM — replace placeholder members, logins, roles, and responsibilities with the actual team roster before evaluation. -->
 
 | Member | 42 login | Role(s) | Responsibility |
 | --- | --- | --- | --- |
@@ -73,6 +75,7 @@ Never commit `.env`; use `.env.example` as the safe template.
 | <name> | <42-login> | Developer | Implementation, tests, review, documentation. |
 
 <!-- HUMAN_CHECK: README_PROJECT_PROCESS — document the actual team process. -->
+<!-- DOC_TODO: README_PROJECT_PROCESS — choose and record cadence, communication channel, and review process after the team agrees them. -->
 Tasks are managed with [tatr](https://github.com/tsoding/tatr) in `tasks/`.
 Record the team’s meeting cadence, communication channel, and review process
 here once selected.
@@ -81,6 +84,7 @@ here once selected.
 
 No Prisma schema exists yet. The first schema proposal must document keys,
 constraints, and migrations for at least:
+<!-- DOC_TODO: README_SCHEMA_PROPOSAL — finalize and promote the Prisma schema specification, including keys, constraints, and migrations, before implementation. -->
 
 ```text
 User ──< Session
@@ -100,7 +104,7 @@ The database owner must promote the finalized schema specification to
 
 - Solo practice: complete one cube, submit, and review score and perspective
   guides.
-- Multiplayer: create or join a room of 3–10 players; the server synchronizes
+- Multiplayer: create or join a room of 1–4 players; the server synchronizes
   the round timer and assigns the same challenge to every player.
 - Freehand drawing: draw only the missing cube edges with pointer, mouse, or
   stylus input.
@@ -121,6 +125,7 @@ tested, and demonstrable; the current total is **0 points**.
 Working drafts are in [`docs/privacy-policy.md`](docs/privacy-policy.md) and
 [`docs/terms-of-service.md`](docs/terms-of-service.md). Before deployment,
 complete their placeholders and expose both as accessible frontend pages.
+<!-- DOC_TODO: README_LEGAL_DRAFTS — complete legal placeholders and expose reviewed pages before deployment. -->
 
 ## Resources and AI use
 

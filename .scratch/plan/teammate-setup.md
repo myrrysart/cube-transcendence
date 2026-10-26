@@ -1,5 +1,8 @@
 # Teammate setup — review draft
 
+<!-- DOC_TODO: SCRATCH_REPO_URL — replace the repository URL placeholder when the canonical remote is confirmed. -->
+<!-- DOC_TODO: SCRATCH_TOOLCHAIN_VERSIONS — set Node.js and application-tool versions when implementation tasks introduce them. -->
+
 This setup prepares the current repository baseline. It starts the development
 database only; the frontend and backend have not been implemented yet.
 

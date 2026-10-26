@@ -1,5 +1,7 @@
 # Tatr task tracker
 
+<!-- DOC_TODO: TATR_CLI_VERSION — confirm the installed Tatr command/version behavior when the team standardizes its toolchain. -->
+
 Tatr is the repository's task tracker. Run it from the repository root; it
 manages records under `tasks/`.
 
@@ -99,6 +101,7 @@ rename its task directory, and preserve the Tatr metadata format.
 
 The installed version does not document a status-update command. Check the
 local help before relying on a command copied from an online example:
+<!-- DOC_TODO: TATR_STATUS_COMMAND — resolve the supported status-update workflow when the team selects or upgrades the Tatr version. -->
 
 ```console
 tatr help

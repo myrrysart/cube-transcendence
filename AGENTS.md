@@ -20,8 +20,7 @@ Do not suggest or generate code outside this explicit architecture:
 * **Backend:** NestJS on Node.js, TypeScript.
 * **Database:** PostgreSQL, Prisma ORM.
 * **Game Engine:** TypeScript game rules, challenge generation, stroke
-  evaluation, and scoring. Browser and server code compile to JavaScript;
-  C++ and WebAssembly are out of scope.
+  evaluation, and scoring. Browser and server code compile to JavaScript.
 
 ## 4. Directory Workflow
 Execute all workflows within these strict boundaries:
@@ -33,6 +32,12 @@ Execute all workflows within these strict boundaries:
   stack, protocols, or deployment, search for `DOC_SYNC` and update every
   affected marked document. Do not update unrelated documents merely to remove
   the marker.
+* Every newly created or edited project document must tag each unresolved,
+  tentative, or changeable decision/detail with exactly this grep-able form:
+  `<!-- DOC_TODO: <ID> — <specific unresolved item and resolution condition>. -->`.
+  Remove or resolve the tag only when the item is finalized. `DOC_SYNC` marks
+  review triggers; `DOC_TODO` marks outstanding decisions/details; `HUMAN_CHECK`
+  marks human verification or replacement.
 * `.scratch/tmp/` & `.scratch/plan/`: Stage all AI conversations, planning, and raw generated code here.
 * Maintain concise, sanitized, batched logs of every AI/user and AI-agent discussion in `.scratch/tmp/`. Do not record secrets, credentials, tokens, cookies, private URLs, or personal data. Prefer automated or end-of-session logging; do not spend a separate tool call on every message solely to update a log. Keep logs disposable and out of final source directories.
 * `srcs/md/`: Save finalized architectural decisions, data models, and specs here to maintain locality.
