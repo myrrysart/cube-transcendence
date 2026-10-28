@@ -1,0 +1,38 @@
+flowchart LR
+    Player[Player browser]
+
+    subgraph Browser[React frontend]
+        UI[React UI]
+        Canvas[Private drawing canvas]
+        ClientRules[TypeScript client rules\nand message types]
+    end
+
+    subgraph Edge[Deployment edge]
+        Caddy[Caddy\nHTTPS / WSS]
+    end
+
+    subgraph Server[NestJS backend]
+        Http[HTTP API]
+        Realtime[WebSocket gateway]
+        Rooms[Room and round authority]
+        Scorer[TypeScript validation\nand scoring]
+        ServerRules[TypeScript server rules\nand message types]
+    end
+
+    Database[(PostgreSQL 16\nvia Prisma)]
+
+    Player --> UI
+    UI --> Canvas
+    UI --> ClientRules
+    UI -->|HTTP: auth, rooms, submission| Caddy
+    UI -->|WebSocket: presence, ready, round, results| Caddy
+    Caddy --> Http
+    Caddy --> Realtime
+    Http --> Rooms
+    Http --> Scorer
+    Realtime --> Rooms
+    Rooms --> Scorer
+    ClientRules -. framework-independent contract .- ServerRules
+    ServerRules --> Scorer
+    Rooms --> Database
+    Scorer --> Database

@@ -27,6 +27,57 @@
 <!-- DOC_TODO: ARCH_TOOLCHAIN_VERSIONS — confirm Node.js and application toolchain versions when implementation tasks select them. -->
 <!-- DOC_TODO: ARCH_CADDY_TIMING — decide when Caddy enters the deployment slice after application services exist. -->
 
+## Initial architecture rendition
+
+The raw Mermaid source is also available in
+[`architecture.mmd`](architecture.mmd) for tools that accept a diagram rather
+than a Markdown document.
+
+```mermaid
+flowchart LR
+    Player[Player browser]
+
+    subgraph Browser[React frontend]
+        UI[React UI]
+        Canvas[Private drawing canvas]
+        ClientRules[TypeScript client rules\nand message types]
+    end
+
+    subgraph Edge[Deployment edge]
+        Caddy[Caddy\nHTTPS / WSS]
+    end
+
+    subgraph Server[NestJS backend]
+        Http[HTTP API]
+        Realtime[WebSocket gateway]
+        Rooms[Room and round authority]
+        Scorer[TypeScript validation\nand scoring]
+        ServerRules[TypeScript server rules\nand message types]
+    end
+
+    Database[(PostgreSQL 16\nvia Prisma)]
+
+    Player --> UI
+    UI --> Canvas
+    UI --> ClientRules
+    UI -->|HTTP: auth, rooms, submission| Caddy
+    UI -->|WebSocket: presence, ready, round, results| Caddy
+    Caddy --> Http
+    Caddy --> Realtime
+    Http --> Rooms
+    Http --> Scorer
+    Realtime --> Rooms
+    Rooms --> Scorer
+    ClientRules -. framework-independent contract .- ServerRules
+    ServerRules --> Scorer
+    Rooms --> Database
+    Scorer --> Database
+```
+
+The browser keeps each attempt private and submits only the final normalized
+stroke data. The backend validates it, controls the round clock and rankings,
+and persists the authoritative outcome.
+
 ## First-slice protocol boundary
 
 - HTTP handles authentication, room creation/joining, and final submission.

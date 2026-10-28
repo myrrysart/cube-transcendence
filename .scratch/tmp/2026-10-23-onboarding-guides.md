@@ -32,3 +32,10 @@
   teammates to maintain existing task metadata while preserving its format;
   current tasks were placed in `ready`, except the active Anki task in `work`
   with `owner-jyniemit`.
+
+- 2026-10-28: Added an initial Mermaid architecture rendition to the accepted
+  baseline. It visualizes the documented browser, edge proxy, NestJS authority,
+  and PostgreSQL/Prisma boundaries without introducing new architecture.
+- 2026-10-28: Added `srcs/md/architecture.mmd` as the raw Mermaid input after
+  a renderer was given the surrounding Markdown document rather than the fenced
+  diagram source.
