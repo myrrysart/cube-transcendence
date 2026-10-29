@@ -50,3 +50,9 @@ Execute all workflows within these strict boundaries:
   Open tasks use exactly one workflow tag from `tasks/tags` (`ready`, `work`,
   or `review`); work and review tasks also have one `owner-<42-login>` tag.
 * `setup/` & `build/`: Docker/Podman containerization configurations.
+
+## 5. Code Style & Error Handling
+* **No `try/catch` in logic:** Avoid `try/catch` blocks. Use discriminated unions (`{ ok: true; data: T } | { ok: false; error: E }`) for expected failures, and rely on NestJS Exception Filters / React Error Boundaries at the edges.
+* **Validate once at boundaries:** Validate untrusted input once at the HTTP/WebSocket entry point. Pass strongly typed values inward; never re-validate internal types defensively.
+* **Immutability & Flat Control Flow:** Prefer `const` and `readonly` types over `let`. Use early `return` guard clauses instead of `else` branches. Never use `any` (use `unknown` + type narrowing).
+* **No speculative abstraction:** Keep logic in one function unless reused. Do not invent helpers or handle theoretical edge cases not specified in `srcs/md/`.
