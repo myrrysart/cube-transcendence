@@ -74,9 +74,11 @@ flowchart LR
     Scorer --> Database
 ```
 
-The browser keeps each attempt private and submits only the final normalized
-stroke data. The backend validates it, controls the round clock and rankings,
-and persists the authoritative outcome.
+The browser keeps each attempt private during a round and submits only final
+normalized stroke data. The backend validates it, controls the round clock,
+freezes accepted drawings, and persists the authoritative outcome. After the
+round closes, it publishes every final drawing with engine-provided point
+feedback and ranking.
 
 ## First-slice protocol boundary
 
@@ -86,13 +88,15 @@ and persists the authoritative outcome.
 - A round records server `startsAt` and `endsAt` timestamps. A submission is
   accepted only from a room participant during the valid round window.
 - The final submission includes normalized freehand stroke points. The server
-  validates size and shape limits, computes the score against the fixed
-  challenge geometry, and persists the result atomically.
+  validates its size and shape limits, freezes the first accepted drawing, and
+  persists it atomically.
 - Shared game rules and message types are framework-independent TypeScript.
   TypeScript types do not validate runtime input: the server validates every
   client message before applying it.
-- When a round closes, the server ranks accepted submissions and sends the same
-  authoritative result to all connected room participants.
+- When a round closes, the server sends every participant's drawing (empty when
+  no submission was accepted) and the fixed challenge to the deterministic
+  engine. It persists and sends the same ranked, point-annotated result to all
+  connected room participants.
 
 ## Repository ownership
 

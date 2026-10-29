@@ -48,8 +48,10 @@ asset management.
 2. A multiplayer room starts only with 1–4 ready participants.
 3. The server assigns one challenge and a start/end timestamp to every player.
 4. Each player freehand-draws the missing edges on their own canvas.
-5. At submission or timeout, the server validates and scores the attempt.
-6. The result view shows the score, rank, and correct perspective guides.
+5. The server freezes each accepted final drawing, then evaluates every
+   participant's drawing together when the round closes.
+6. The result view shows every final drawing, score, rank, point feedback, and
+   correct perspective guides.
 
 The server is authoritative for capacity, room membership, timestamps,
 submission acceptance, scoring, and final rankings. Clients never determine

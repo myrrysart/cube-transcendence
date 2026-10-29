@@ -94,8 +94,9 @@ Round ──> Challenge
 ```
 
 `RoomParticipant` records membership and connection state. Each `Submission`
-contains one player's freehand attempt and its server-calculated score; a unique
-constraint must allow at most one final submission per player per round.
+contains one player's frozen freehand attempt and its server-calculated result;
+a unique constraint must allow at most one accepted final submission per player
+per round.
 
 The database owner must promote the finalized schema specification to
 `srcs/md/` before implementing its Prisma migration.
@@ -108,8 +109,8 @@ The database owner must promote the finalized schema specification to
   the round timer and assigns the same challenge to every player.
 - Freehand drawing: draw only the missing cube edges with pointer, mouse, or
   stylus input.
-- Result: server-side validation and scoring produces a ranked result, with a
-  clear winner, tie, or loss state.
+- Result: after the round closes, server-side evaluation produces a ranked
+  result with every final drawing and its point feedback visible to the room.
 
 The first scope excludes a general art workspace, shared live strokes, chat,
 matchmaking, rankings across matches, and extra game modes.
