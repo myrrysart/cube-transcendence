@@ -21,3 +21,6 @@ postgres-data/
 !.scratch/tmp/.gitkeep
 !.scratch/plan/
 !.scratch/plan/.gitkeep
+
+# Deepwork state is local and disposable
+.slim/deepwork/
