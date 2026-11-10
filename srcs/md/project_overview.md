@@ -7,8 +7,19 @@
 <!-- DOC_TODO: OVERVIEW_SCOPE_REVIEW — reconfirm gameplay scope and capacity after team review. -->
 
 Cube Challenge Multiplayer turns a short perspective-drawing drill into a
-game. Given one visible face of a cube, a player freehand-draws the missing
-structure, submits it, and receives perspective feedback and a score.
+game. Given the closest visible face of a cube as a solid reference, a player
+freehand-draws the other visible edges, submits the result, and receives
+perspective feedback and a score that rewards both accurate strokes and
+finishing every target path. The minimum presentation uses a three-point
+perspective cube: the reference face is not a drawing requirement and never
+receives feedback.
+<!-- DOC_TODO: OVERVIEW_CHALLENGE_GENERATION — define finalized CreatorDraft ranges and the required visibility rules for target edges before publishing user-created challenges. -->
+
+Challenge creation is a local authoring flow: it compiles a metric cube and a
+center-tracking camera through orthographic, perspective, or equidistant
+curvilinear-fisheye projection, assigns every projected edge a persisted role,
+and saves an editable source draft beside the authoritative `Challenge` JSON
+later stored by the backend. It is not a player-facing drawing mode.
 
 - **Solo practice** is the smallest complete learning loop.
 - **Multiplayer** supports rooms of 1–4 simultaneous players. Every player
@@ -62,8 +73,10 @@ the winner.
 - `srcs/md/`: reviewed architectural decisions and specifications.
 - `srcs/frontend/`: React application.
 - `srcs/backend/`: NestJS application, Prisma schema, and migrations.
-- `srcs/core/`: no active source code; game logic is implemented in TypeScript
-  within the frontend and backend applications.
+- `srcs/core/game-engine/`: dependency-free TypeScript game rules shared by the
+  frontend and backend applications. It receives and returns documented game
+  data only; browser rendering, HTTP, database, and NestJS concerns stay at the
+  edges.
 - `.scratch/tmp/` and `.scratch/plan/`: disposable planning and generated
   material; decisions require human review before promotion.
 - `tasks/`: Tatr creates, lists, and queries task records; teammates maintain
