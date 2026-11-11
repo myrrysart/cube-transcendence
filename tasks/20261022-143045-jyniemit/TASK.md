@@ -1,6 +1,6 @@
 # Create anki how-to guide
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: onboarding work owner-jyniemit
 

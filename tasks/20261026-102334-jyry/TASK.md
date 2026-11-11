@@ -1,6 +1,6 @@
 # create a paper mockup of the game ui and rules
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: design
 

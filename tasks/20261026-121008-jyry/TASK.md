@@ -1,6 +1,6 @@
 # Create the 'blackbox design' of the frontend
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: api
 
