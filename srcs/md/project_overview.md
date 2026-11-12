@@ -38,8 +38,10 @@ artwork, or assets are reused.
   surface, feedback, and results UI.
 - **Backend:** NestJS on Node.js with TypeScript for validation, room and round
   state, WebSocket notifications, and authoritative scoring.
-- **Database:** PostgreSQL with Prisma for relational user, room, round, and
-  submission data.
+- **Database:** PostgreSQL with Prisma for relational user, room, round,
+  submission, result, and claimable scoring-job data. PostgreSQL is also the
+  initial durable queue for closed-round scoring; no separate queue service is
+  introduced until measured queue delay or database contention requires one.
 - **Game engine:** TypeScript implements all game rules, challenge generation,
   stroke evaluation, and scoring. Browser and server code compile to JavaScript.
 
@@ -57,7 +59,8 @@ asset management.
 
 1. A player chooses solo practice or creates/joins a multiplayer room.
 2. A multiplayer room starts only with 1–4 ready participants.
-3. The server assigns one challenge and a start/end timestamp to every player.
+3. The server assigns every player a public round prompt and start/end
+   timestamp. It retains the full scoring challenge until result publication.
 4. Each player freehand-draws the missing edges on their own canvas.
 5. The server freezes each accepted final drawing, then evaluates every
    participant's drawing together when the round closes.

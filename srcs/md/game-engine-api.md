@@ -32,6 +32,24 @@ A stroke is one continuous pointer gesture from pointer-down to pointer-up.
 Its points are ordered. A drawing may contain any number of strokes, including
 one-point strokes and no strokes.
 
+## Active-round frontend payload
+
+For multiplayer, the backend sends a `RoundPrompt` JSON payload when the round
+starts. It is a deliberately limited projection of the backend's full scoring
+challenge:
+
+```ts
+type PromptEdge = { points: readonly Point[] };
+type RoundPrompt = { roundId: string; startsAt: string; endsAt: string; referenceEdges: readonly PromptEdge[] };
+```
+
+The active-round payload contains only the visible reference-edge geometry and
+the timer needed to render the drawing surface. It must not contain target or
+hidden edges, target or scoring edge IDs, `hitTolerance`, `completionThreshold`,
+the full `Challenge`, the `CreatorDraft`, a score, or a rank. The backend keeps
+that data and sends challenge geometry and feedback only in the published
+result after the round closes.
+
 ## Frontend-to-backend submission
 
 The frontend sends one `FinalDrawing` to `POST /rounds/:roundId/submission`
@@ -50,6 +68,19 @@ The backend enforces these input limits:
 - at most 4,096 points in one stroke;
 - at most 16,384 points in one drawing;
 - every coordinate is finite and within the normalized coordinate space.
+
+## Closed-round scoring job
+
+When a round reaches its server-controlled end time, the backend records one
+idempotent, pending scoring job identified by the round. NestJS worker
+processes claim pending jobs from PostgreSQL, build the closed-round engine
+input, persist the result, and publish it to the room. A retry must not create
+or publish a second result for the same round.
+
+This PostgreSQL-backed job queue is the initial scaling design: HTTP and
+WebSocket handlers do not run the evaluator themselves, so workers may scale
+independently. A separate queue service is deliberately deferred until
+measurement shows sustained job delay or database contention.
 
 ## Closed-round engine input
 
