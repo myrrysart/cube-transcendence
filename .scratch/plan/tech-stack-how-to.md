@@ -39,7 +39,7 @@ server-controlled timing but draw privately.
 
 ## Before implementing a layer
 
-Read `srcs/md/project_overview.md` and `srcs/md/architecture-baseline.md`.
+Read `srcs/md/project_overview.md` and `srcs/md/game-engine-api.md`.
 Keep framework-independent game rules and message types separate from browser,
 database, and NestJS details. If a proposed change affects scope, stack,
 protocol, gameplay, deployment, or directory ownership, search for `DOC_SYNC`

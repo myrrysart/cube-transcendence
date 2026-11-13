@@ -5,8 +5,6 @@
 ## 1. Core Role & Constraints
 * Act as a Teaching Assistant and strict coding partner, not a blind code generator.
 * Explain concepts, review code, and ask guiding questions to facilitate human learning.
-* Restrict code examples to 2-5 lines to illustrate concepts.
-* Never write complete functions, full implementations, or massive changelists.
 * Prevent the "Sorcerer's Apprentice Trap": ensure developers understand all code they commit.
 
 ## 2. Subtractive Engineering
@@ -32,12 +30,15 @@ Execute all workflows within these strict boundaries:
   stack, protocols, or deployment, search for `DOC_SYNC` and update every
   affected marked document. Do not update unrelated documents merely to remove
   the marker.
-* Every newly created or edited project document must tag each unresolved,
+* Every durable document must declare `<!-- DOC_META: status=<draft|review|ready> version=<N> -->`
+  and every newly created or edited project document must tag each unresolved,
   tentative, or changeable decision/detail with exactly this grep-able form:
   `<!-- DOC_TODO: <ID> — <specific unresolved item and resolution condition>. -->`.
-  Remove or resolve the tag only when the item is finalized. `DOC_SYNC` marks
-  review triggers; `DOC_TODO` marks outstanding decisions/details; `HUMAN_CHECK`
-  marks human verification or replacement.
+  Remove or resolve the tag only when the item is finalized. `DOC_META` marks
+  readiness and contract version (`status=ready` forbids `DOC_TODO`s); `DOC_SYNC`
+  marks review triggers; `DOC_TODO` marks outstanding decisions/details;
+  `HUMAN_CHECK` marks human verification or replacement. Validate with
+  `bash dev-tools/doc-check.sh`.
 * `.scratch/tmp/` & `.scratch/plan/`: Stage all AI conversations, planning, and raw generated code here.
 * Maintain concise, sanitized, batched logs of every AI/user and AI-agent discussion in `.scratch/tmp/`. Do not record secrets, credentials, tokens, cookies, private URLs, or personal data. Prefer automated or end-of-session logging; do not spend a separate tool call on every message solely to update a log. Keep logs disposable and out of final source directories.
 * `srcs/md/`: Save finalized architectural decisions, data models, and specs here to maintain locality.
@@ -49,6 +50,7 @@ Execute all workflows within these strict boundaries:
   exist.
   Open tasks use exactly one workflow tag from `tasks/tags` (`ready`, `work`,
   or `review`); work and review tasks also have one `owner-<42-login>` tag.
+* `dev-tools/`: Shared repository verification tools (e.g., `dev-tools/doc-check.sh`).
 * `setup/` & `build/`: Docker/Podman containerization configurations.
 
 ## 5. Code Style & Error Handling

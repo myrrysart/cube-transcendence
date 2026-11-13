@@ -1,6 +1,6 @@
 # Create project management guide
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: onboarding ready
 

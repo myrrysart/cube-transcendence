@@ -1,0 +1,10 @@
+## Challenge creator session
+
+- User requested a local tool for generating three-point-perspective cube challenges before connecting the existing mock frontend to the engine.
+- A persisted `Challenge` now keeps every cube edge with one role: `reference` (visible, unscored), `target` (scored, hidden during play), or `hidden` (not rendered/scored but retained for editing).
+- First creator scope: generate a valid cube, expose editable vanishing points and reference face, edit edge roles, and export the exact JSON later stored by the backend.
+- Generator scope is projective rather than camera-calibrated: editable vanishing points, a near corner, and three recession amounts derive a cube with convergent edge families. Metric Euclidean enforcement is explicitly deferred.
+- Core generator tests now cover stable topology, correct-family VP convergence, edits to all generator inputs, roles, determinism, and malformed input. The browser creator imports that core generator, preserves invalid drafts while retaining the last valid preview, and exports persisted Challenge JSON. Core tests/typecheck and frontend production build pass.
+- Creator v2 replaces the projective box with a metric 3D cube and center-tracking camera. It saves source draft plus immutable Challenge v2 paths, supports orthographic, pinhole perspective, and equidistant curvilinear fisheye projections, and scores target polylines. Fisheye clipping rejects compilation; invalid drafts cannot export stale JSON. Core test/typecheck and frontend build pass. Browser review remains required.
+- Human review requested edge-ID labels linked to their canvas paths and found the default prompt face was camera-far. Next correction derives/enforces the camera-nearest solid face and improves edge-ID interaction.
+- Core now derives and enforces the camera-nearest reference face; the creator begins with its nearest `x:1` face and renders clickable, keyboard-focusable edge IDs linked to the role list. Core test/typecheck and frontend production build pass (12 tests).

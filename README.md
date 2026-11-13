@@ -1,5 +1,6 @@
 # Project Transcendence — Cube Challenge Multiplayer
 
+<!-- DOC_META: status=draft version=1 -->
 <!-- DOC_SYNC: Review after changes to project scope, architecture, gameplay, stack, deployment, or documentation locations. -->
 
 *This project has been created as part of the 42 curriculum by jyniemit.*
@@ -31,15 +32,16 @@ game state small and reliable.
 | Game engine | TypeScript | Rules, challenge generation, stroke evaluation, and scoring; compiled to JavaScript for browser and server execution. |
 | Deployment | Docker Compose, then Caddy HTTPS | Reproducible containers and HTTPS/WSS. |
 
-See [`srcs/md/architecture-baseline.md`](srcs/md/architecture-baseline.md) for
-accepted decisions and intentionally deferred details.
+See [`srcs/md/project_overview.md`](srcs/md/project_overview.md) and
+[`srcs/md/game-engine-api.md`](srcs/md/game-engine-api.md) for accepted
+decisions and protocol boundaries.
 
 ## Architecture documentation
 
 - [`srcs/md/project_overview.md`](srcs/md/project_overview.md): product scope,
-  game flow, and first vertical slice.
-- [`srcs/md/architecture-baseline.md`](srcs/md/architecture-baseline.md):
-  accepted technical decisions and protocol boundaries.
+  architecture diagram, game flow, and first vertical slice.
+- [`srcs/md/game-engine-api.md`](srcs/md/game-engine-api.md):
+  accepted game engine contract and protocol boundaries.
 
 ## Getting started
 

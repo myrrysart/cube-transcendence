@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "bun --bun x tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "latest"
+  }
+}

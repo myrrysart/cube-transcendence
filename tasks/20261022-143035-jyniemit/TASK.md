@@ -1,6 +1,6 @@
 # Create agents how-to guide
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: onboarding ready
 

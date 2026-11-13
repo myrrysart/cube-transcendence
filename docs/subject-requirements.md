@@ -1,5 +1,7 @@
 # ft_transcendence — Requirements Reference
 
+<!-- DOC_META: status=ready version=19 -->
+
 > This is a working, rigorous restatement of the supplied **ft_transcendence Surprise, version 19.0** subject and evaluation checklist. The official subject and evaluation criteria remain authoritative. Update this document if those sources change.
 
 ## 1. Pass/fail conditions

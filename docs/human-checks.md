@@ -1,5 +1,7 @@
 # Human Evaluation Checks
 
+<!-- DOC_META: status=ready version=1 -->
+
 `HUMAN_CHECK:` marks text that a human must verify or replace before the final
 evaluation. It is intentionally plain text so it works in Markdown, source,
 configuration, and comments.
