@@ -1,5 +1,7 @@
 # Cube Challenge Multiplayer — Considered Plans
 
+<!-- DOC_META: status=review version=1 -->
+
 > This document records the selected product boundary and rejected scope. It is
 > not a claim that any feature or module has been implemented.
 <!-- DOC_TODO: PLANS_PROMOTION_REVIEW — promote only team-reviewed decisions from this planning record into durable architecture documents. -->

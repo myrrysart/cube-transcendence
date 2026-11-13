@@ -1,5 +1,6 @@
 # Game engine API boundary
 
+<!-- DOC_META: status=ready version=2 -->
 <!-- DOC_SYNC: Review after changes to game rules, challenge geometry, submission protocol, scoring, ranking, or result visibility. -->
 
 ## Purpose and ownership

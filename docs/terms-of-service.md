@@ -1,5 +1,6 @@
 # Terms of Service — Draft for Project Transcendence
 
+<!-- DOC_META: status=draft version=1 -->
 <!-- HUMAN_CHECK: TERMS_EFFECTIVE_DATE — set at release. -->
 **Effective date:** <YYYY-MM-DD>
 

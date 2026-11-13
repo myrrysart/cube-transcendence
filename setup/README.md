@@ -1,5 +1,7 @@
 # Container baseline
 
+<!-- DOC_META: status=draft version=1 -->
+
 This file currently starts only PostgreSQL for local schema work:
 
 ```console

@@ -1,5 +1,6 @@
 # Tatr task tracker
 
+<!-- DOC_META: status=review version=1 -->
 <!-- DOC_TODO: TATR_CLI_VERSION — confirm the installed Tatr command/version behavior when the team standardizes its toolchain. -->
 
 Tatr is the repository's task tracker. Run it from the repository root; it

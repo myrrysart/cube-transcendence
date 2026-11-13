@@ -1,5 +1,6 @@
 # Project Transcendence — Cube Challenge Multiplayer
 
+<!-- DOC_META: status=review version=2 -->
 <!-- DOC_SYNC: Review after changes to project scope, architecture, gameplay, stack, protocols, deployment, or directory ownership. -->
 
 ## 1. Project vision
@@ -55,6 +56,58 @@ The product deliberately excludes infinite-canvas coordinates, paint tools,
 colour mixing, screenshots, kitbashing, live shared strokes, chat, and general
 asset management.
 
+```mermaid
+flowchart LR
+    Player["Player browser"]
+
+    subgraph Browser["React frontend (srcs/frontend)"]
+        UI["React UI"]
+        Canvas["Private drawing canvas"]
+    end
+
+    subgraph Core["Shared rules (srcs/core/game-engine)"]
+        Engine["Deterministic compiler\nand evaluator"]
+    end
+
+    subgraph Edge["Deployment edge"]
+        Caddy["Caddy\nHTTPS / WSS"]
+    end
+
+    subgraph Server["NestJS backend (srcs/backend)"]
+        Http["HTTP API"]
+        Realtime["WebSocket gateway"]
+        Rooms["Room and round authority"]
+        Worker["Scoring job worker"]
+    end
+
+    Database[("PostgreSQL 16 + Prisma\n(state + scoring jobs)")]
+
+    Player --> UI
+    UI --> Canvas
+    UI -. "solo practice only" .-> Engine
+    UI -->|"HTTP: auth, rooms, final submission"| Caddy
+    UI -->|"WebSocket: presence, ready, round, results"| Caddy
+    Caddy --> Http
+    Caddy --> Realtime
+    Http --> Rooms
+    Realtime --> Rooms
+    Rooms --> Database
+    Worker -->|"claim closed-round job"| Database
+    Worker --> Engine
+    Worker -->|"publish ranked result"| Realtime
+```
+
+### Protocol boundary
+
+- **HTTP** handles authentication, room creation/joining, and final drawing
+  submission (`POST /rounds/:roundId/submission`).
+- **WebSocket** communicates room presence, ready state, round start/end
+  (`RoundPrompt`), disconnect/reconnect, and result publication. It never
+  streams live drawing strokes.
+- **Validation boundary:** TypeScript types do not validate runtime input; the
+  server validates untrusted client payloads once at the HTTP/WebSocket entry
+  point before persisting or evaluating them.
+
 ## 3. Game flow
 
 1. A player chooses solo practice or creates/joins a multiplayer room.
@@ -85,6 +138,8 @@ the winner.
 - `tasks/`: Tatr creates, lists, and queries task records; teammates maintain
   their Markdown title, body, and metadata for standups, blockers, decisions,
   and workflow without moving or renaming Tatr HUID directories.
+- `dev-tools/`: shared repository verification tools such as
+  `dev-tools/doc-check.sh`.
 - `setup/` and `build/`: Docker/Podman configuration.
 
 ## 5. First vertical slice
