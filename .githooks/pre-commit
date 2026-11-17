@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Do not stage files or alter the user's index from this hook.
+set -euo pipefail
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+# Run the checker from the same index as the proposed commit. An unstaged
+# edit of the working checker must not change what this commit validates.
+checker=$(mktemp "${TMPDIR:-/tmp}/transcendence-pre-commit.XXXXXX")
+trap 'rm -f -- "$checker"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+git cat-file blob :dev-tools/doc-check.sh > "$checker"
+bash "$checker" --staged

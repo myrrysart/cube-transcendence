@@ -1,13 +1,13 @@
 # Project Transcendence — Cube Challenge Multiplayer
 
-<!-- DOC_META: status=draft version=1 -->
+<!-- DOC_META: status=draft version=2 -->
 <!-- DOC_SYNC: Review after changes to project scope, architecture, gameplay, stack, deployment, or documentation locations. -->
 
 *This project has been created as part of the 42 curriculum by jyniemit.*
 
-> **Repository baseline:** the architecture and development database are set up;
-> the application itself has not yet been implemented. Do not claim unfinished
-> modules in an evaluation.
+> **Repository baseline:** the deterministic game engine and a local solo/creator
+> frontend are implemented. The backend and complete multiplayer deployment are
+> still pending. Do not claim unfinished modules in an evaluation.
 
 ## Goal
 
@@ -42,6 +42,8 @@ decisions and protocol boundaries.
   architecture diagram, game flow, and first vertical slice.
 - [`srcs/md/game-engine-api.md`](srcs/md/game-engine-api.md):
   accepted game engine contract and protocol boundaries.
+- [`srcs/md/contract-harness.md`](srcs/md/contract-harness.md): standalone
+  file revisions, contract synchronization, commit checks, and history.
 
 ## Getting started
 
@@ -52,6 +54,35 @@ decisions and protocol boundaries.
 - later: Node.js and any implementation toolchains, with versions set by their
   owning tasks.
 <!-- DOC_TODO: README_TOOLCHAIN_VERSIONS — set Node.js and implementation-toolchain versions when their owning tasks are accepted. -->
+
+### Standalone contract checks — first step after cloning
+
+Use Git and Bash with standard shell utilities (Git Bash on Windows). The
+harness does not require Node.js, GSD, an editor plugin, or any AI model.
+
+```console
+bash dev-tools/doc-check.sh
+bash dev-tools/install-hooks.sh
+bash dev-tools/install-hooks.sh --check
+```
+
+Git does not activate repository-provided hooks automatically on clone; the
+installer enables this repository's tracked `.githooks/pre-commit` once.
+Before committing a reviewed change:
+
+```console
+git add <reviewed-files>
+bash dev-tools/doc-check.sh --record
+git diff -- srcs/md/file-versions.tsv
+git add srcs/md/file-versions.tsv
+bash dev-tools/doc-check.sh --staged
+```
+
+New files need an explicit contract mapping first. See the
+[harness contract](srcs/md/contract-harness.md) for the registry format, history,
+and existing-custom-hook handling. Run `bash dev-tools/test-harness.sh` to test
+the harness in disposable repositories. Version checks complement behavioral
+tests and human review; they do not prove semantic equivalence.
 
 ### Development database
 

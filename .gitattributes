@@ -1,0 +1,5 @@
+# Keep portable verification tools executable by Unix shells after checkout.
+*.sh text eol=lf
+*.awk text eol=lf
+*.tsv text eol=lf
+.githooks/* text eol=lf

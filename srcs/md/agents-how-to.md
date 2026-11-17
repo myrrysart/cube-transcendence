@@ -1,6 +1,6 @@
 # Working with project coding agents — review draft
 
-<!-- DOC_META: status=review version=1 -->
+<!-- DOC_META: status=review version=2 -->
 <!-- DOC_TODO: AGENTS_GUIDE_REVIEW — finalize this review draft after the team confirms the agent workflow. -->
 
 Coding agents can accelerate research and routine edits. They do not own a
@@ -47,7 +47,11 @@ changeable details; every newly created or edited project document must use
 `<!-- DOC_TODO: <ID> — <specific unresolved item and resolution condition>. -->`
 for each such item, and remove or resolve it when finalized. `HUMAN_CHECK`
 marks human verification or replacement. Run `bash dev-tools/doc-check.sh` to
-validate links, marker syntax, readiness, and contract version sync.
+validate links, marker syntax, readiness, and file-contract synchronization.
+Follow [the standalone harness contract](contract-harness.md) to record reviewed
+staged file revisions and contract references. The pre-commit hook uses the
+staged snapshot, not uncommitted editor state. Activate it once per clone with
+`bash dev-tools/install-hooks.sh`; no GSD or other agent tooling is required.
 
 ## Delegate deliberately
 

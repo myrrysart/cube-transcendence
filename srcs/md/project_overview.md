@@ -1,6 +1,6 @@
 # Project Transcendence — Cube Challenge Multiplayer
 
-<!-- DOC_META: status=review version=2 -->
+<!-- DOC_META: status=review version=3 -->
 <!-- DOC_SYNC: Review after changes to project scope, architecture, gameplay, stack, protocols, deployment, or directory ownership. -->
 
 ## 1. Project vision
@@ -139,7 +139,9 @@ the winner.
   their Markdown title, body, and metadata for standups, blockers, decisions,
   and workflow without moving or renaming Tatr HUID directories.
 - `dev-tools/`: shared repository verification tools such as
-  `dev-tools/doc-check.sh`.
+  `dev-tools/doc-check.sh`. The [standalone harness](contract-harness.md) checks
+  staged file revisions and contract references through `.githooks/pre-commit`.
+  Git retains the file and contract history; AI tooling is optional.
 - `setup/` and `build/`: Docker/Podman configuration.
 
 ## 5. First vertical slice
