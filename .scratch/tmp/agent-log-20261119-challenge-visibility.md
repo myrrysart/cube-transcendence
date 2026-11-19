@@ -1,0 +1,11 @@
+- Agreed on automatic opaque visibility, transparent rear paths, visible seams as targets, a front-facing outer outline as the prompt, and Xs only on exterior faces.
+- Scoped the first pass to a perspective clipping prototype with hand-checkable fixtures before scene topology, Creator Studio, batch inspection, and database import.
+- Added a staged perspective grid compiler and named cube layouts. Tests cover unique shared seams, partial occlusion, equal prompts across materials, exterior-only Xs, and perfect traces through the existing evaluator.
+- Built a standalone development Creator Studio preview: deterministic batches, paged prompt/answer review, QA flags, per-card approval, and approved-only JSON. Verified the full 336-candidate browser flow and the JSON Blob passed to the download link. No database writes or production source edits.
+- Updated the prompt rule: visible reference-surface grid seams and Xs are shown and not scored. Other visible seams and Xs remain targets.
+- Increased the default to 40 camera views per variant, with up to 1,120 candidates in one batch. Discussed a Loomis study as a separate authoring preset with a triangle prompt and construction-line targets.
+- Added a separate 40-view Loomis head preset. The brow-to-chin triangle is reference-only; the cranium, jaw, and visible side plane are scored targets.
+- Corrected the Loomis triangle to use a point just below the nose and trimmed the skull arc at the flattened side rim. Added a regression fixture for the reported 17° yaw / 23° pitch and its mirror.
+- Brought the brow and cheek contour forward to keep the face triangle inside the head in the reported −55° yaw / 9° pitch view and the rest of the 40-view batch.
+- Replaced the near-side temple-to-cheek shortcut with a mandible anchored to the lower flattened side plane. The jaw passes through its rear angle to the chin without crossing the side ellipse.
+- Added optional manga-style eyebrow, upper eyelid, nose, and mouth construction marks to the Loomis answer overlay. The marks follow the 3D pose and are not exported or scored.

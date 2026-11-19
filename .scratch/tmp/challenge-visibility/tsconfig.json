@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "typeRoots": ["../../../srcs/core/game-engine/node_modules/@types"],
+    "types": ["bun"],
+    "paths": {
+      "react": ["../../../srcs/frontend/node_modules/@types/react"],
+      "react/*": ["../../../srcs/frontend/node_modules/@types/react/*"],
+      "react-dom/*": ["../../../srcs/frontend/node_modules/@types/react-dom/*"]
+    }
+  },
+  "include": ["*.ts", "*.tsx", "*.mts"]
+}
