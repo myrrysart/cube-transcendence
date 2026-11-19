@@ -1,0 +1,35 @@
+{
+  "name": "cube-challenge-backend",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22.12 <26"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node --env-file-if-exists=../../.env dist/backend/src/main.js",
+    "worker": "node --env-file-if-exists=../../.env dist/backend/src/worker.js",
+    "test": "npm run build && node --test dist/backend/test/*.test.js",
+    "test:integration": "npm run build && node --env-file-if-exists=../../.env --test dist/backend/test/*.integration.js",
+    "prisma:generate": "prisma generate",
+    "db:migrate": "node --env-file-if-exists=../../.env node_modules/prisma/build/index.js migrate deploy",
+    "db:seed": "node --env-file-if-exists=../../.env dist/backend/src/seed.js"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/core": "^11.1.0",
+    "@nestjs/platform-express": "^11.1.0",
+    "@prisma/client": "6.19.0",
+    "express": "^5.1.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "ws": "8.23.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "@types/ws": "8.18.2",
+    "prisma": "6.19.0",
+    "typescript": "~5.9.3"
+  }
+}

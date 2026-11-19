@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String             @id @default(uuid()) @db.Uuid
+  label        String
+  email        String?            @unique
+  passwordHash String?
+  roomMembers  RoomParticipant[]
+  hostedRooms  Room[]             @relation("RoomHost")
+  createdAt    DateTime           @default(now()) @db.Timestamptz(3)
+  sessions     Session[]
+  participants RoundParticipant[]
+}
+
+model Session {
+  tokenHash String   @id
+  kind      SessionKind @default(guest)
+  userId    String   @db.Uuid
+  expiresAt DateTime @db.Timestamptz(3)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([expiresAt])
+}
+
+model Challenge {
+  id       String  @id
+  geometry Json    @db.JsonB
+  rounds   Round[]
+}
+
+model Round {
+  id           String             @id @default(uuid()) @db.Uuid
+  challengeId  String
+  roomId       String?            @db.Uuid
+  room         Room?              @relation("RoomRounds", fields: [roomId], references: [id], onDelete: Restrict)
+  activeIn     Room?              @relation("ActiveRound")
+  startsAt     DateTime           @db.Timestamptz(3)
+  endsAt       DateTime           @db.Timestamptz(3)
+  challenge    Challenge          @relation(fields: [challengeId], references: [id], onDelete: Restrict)
+  participants RoundParticipant[]
+  job          ScoringJob?
+  result       RoundResult?
+}
+
+model RoundParticipant {
+  id         String      @id @default(uuid()) @db.Uuid
+  roundId    String      @db.Uuid
+  userId     String      @db.Uuid
+  round      Round       @relation(fields: [roundId], references: [id], onDelete: Restrict)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  submission Submission?
+
+  @@unique([roundId, userId])
+}
+
+model Submission {
+  participantId String           @id @db.Uuid
+  drawing       Json             @db.JsonB
+  receivedAt    DateTime         @db.Timestamptz(3)
+  participant   RoundParticipant @relation(fields: [participantId], references: [id], onDelete: Restrict)
+}
+
+model ScoringJob {
+  roundId    String    @id @db.Uuid
+  status     JobStatus @default(pending)
+  claimToken String?   @db.Uuid
+  leaseUntil DateTime? @db.Timestamptz(3)
+  attempts   Int       @default(0)
+  round      Round     @relation(fields: [roundId], references: [id], onDelete: Restrict)
+
+  @@index([status, leaseUntil])
+}
+
+model RoundResult {
+  roundId   String   @id @db.Uuid
+  result    Json     @db.JsonB
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  round     Round    @relation(fields: [roundId], references: [id], onDelete: Restrict)
+}
+
+enum JobStatus {
+  pending
+  running
+  done
+}
+
+
+enum SessionKind {
+  guest
+  account
+}
+
+model Room {
+  id            String            @id @default(uuid()) @db.Uuid
+  hostId        String            @db.Uuid
+  createdAt     DateTime          @default(now()) @db.Timestamptz(3)
+  activeRoundId String?           @unique @db.Uuid
+  host          User              @relation("RoomHost", fields: [hostId], references: [id], onDelete: Restrict)
+  members       RoomParticipant[]
+  rounds        Round[]           @relation("RoomRounds")
+  activeRound   Round?            @relation("ActiveRound", fields: [activeRoundId], references: [id], onDelete: SetNull)
+}
+
+model RoomParticipant {
+  roomId     String    @db.Uuid
+  userId     String    @db.Uuid
+  ready      Boolean   @default(false)
+  lastSeenAt DateTime? @db.Timestamptz(3)
+  room       Room      @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@id([roomId, userId])
+  @@index([userId])
+}
