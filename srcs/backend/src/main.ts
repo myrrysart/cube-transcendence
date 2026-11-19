@@ -12,8 +12,14 @@ export async function createApplication() {
   app.setGlobalPrefix('api');
   app.use((req: Request, res: Response, next: NextFunction) => {
     const origin = req.headers.origin;
-    const allowed = process.env.APP_ORIGIN ?? 'http://127.0.0.1:5173';
-    if (origin && origin !== allowed) { res.status(403).json({ error: 'origin_not_allowed' }); return; }
+    const allowedOrigins = (process.env.APP_ORIGIN ?? 'http://127.0.0.1:5173')
+      .split(',')
+      .map((value) => value.trim());
+    allowedOrigins.push('http://localhost:5173');
+    if (origin && !allowedOrigins.includes(origin)) {
+      res.status(403).json({ error: 'origin_not_allowed' });
+      return;
+    }
     next();
   });
   app.use(json({ limit: '2mb' }));

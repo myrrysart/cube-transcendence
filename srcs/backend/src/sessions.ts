@@ -10,9 +10,11 @@ const cookieToken = (cookie: string | undefined): string | undefined => cookie?.
 export class Sessions {
   constructor(private readonly db: Database) {}
 
-  async createGuest(): Promise<string> {
-    const user = await this.db.user.create({ data: { label: 'Guest' } });
-    return this.issue(user.id, 'guest');
+  async createGuest(): Promise<{ id: string; token: string; label: string }> {
+    const label = `Guest-${randomBytes(4).toString('hex').toUpperCase()}`;
+    const user = await this.db.user.create({ data: { label } });
+    const token = await this.issue(user.id, 'guest');
+    return { id: user.id, token, label };
   }
 
   async issue(userId: string, kind: SessionKind): Promise<string> {

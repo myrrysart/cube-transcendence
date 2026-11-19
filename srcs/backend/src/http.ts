@@ -28,10 +28,24 @@ export class HttpController {
     if (process.env.ENABLE_DEV_SESSION !== 'true' || process.env.NODE_ENV === 'production') {
       throw new HttpException({ error: 'development_sessions_disabled' }, 404);
     }
-    if (await this.sessions.identify(req.headers.cookie)) return { label: 'Guest' };
-    const token = await this.sessions.createGuest();
-    res.cookie('cube_session', token, { httpOnly: true, sameSite: 'strict', path: '/api', maxAge: 86400000 });
-    return { label: 'Guest' };
+
+    const existingUserId = await this.sessions.identify(req.headers.cookie);
+
+    if (existingUserId) {
+      const user = await this.db.user.findUniqueOrThrow({ where: { id: existingUserId } });
+      return { id: user.id, label: user.label, isGuest: !user.email };
+    }
+
+    const guest = await this.sessions.createGuest();
+
+    res.cookie('cube_session', guest.token, {
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/api',
+      maxAge: 86400000,
+    });
+
+    return { id: guest.id, label: guest.label, isGuest: true };
   }
 
   @Post('auth/signup') async signup(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -56,8 +70,7 @@ export class HttpController {
 
   @Get('auth/me') async me(@Req() req: Request) {
     const user = await this.db.user.findUniqueOrThrow({ where: { id: await this.user(req) } });
-    if (!user.email) throw new UnauthorizedException();
-    return { id: user.id, label: user.label };
+    return { id: user.id, label: user.label, isGuest: !user.email };
   }
 
   @Post('auth/logout') async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
