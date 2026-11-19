@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { closestReferenceFace, compileChallenge, cubeVertices, evaluateGame, type CreatorDraft, type Challenge } from "./index";
+import { closestReferenceFace, compileChallenge, cubeVertices, evaluateGame, previewDraft, type CreatorDraft, type Challenge } from "./index";
 
 const edgeIds = ["x:0:0", "x:0:1", "x:1:0", "x:1:1", "y:0:0", "y:0:1", "y:1:0", "y:1:1", "z:0:0", "z:0:1", "z:1:0", "z:1:1"] as const;
 const boundary: Record<string, readonly string[]> = {
@@ -75,6 +75,19 @@ describe("compileChallenge", () => {
     expect(compileChallenge({ ...draft(), referenceFaceId: "q:0" }).ok).toBe(false);
     expect(compileChallenge({ ...draft(), roles: { ...draft().roles, "y:0:1": "target" } }).ok).toBe(false);
     expect(compileChallenge({ ...draft(), roles: Object.fromEntries(edgeIds.map((id) => [id, "hidden"])) }).ok).toBe(false);
+  });
+  test("previewDraft projects geometry through role/face/bounds warnings and exposes facing gizmo when unprojectable", () => {
+    const orbited = previewDraft({ ...draft("perspective"), camera: { ...draft("perspective").camera, orbitDegrees: { yaw: 180, pitch: 90 } } });
+    expect(orbited.edges?.length).toBe(12);
+    expect(orbited.warnings.filter((w) => w.active).map((w) => w.id)).toEqual(["ref_face", "invalid_input"]);
+    expect(new Set(orbited.warnings.map((w) => `${w.x},${w.y}`)).size).toBe(orbited.warnings.length);
+    const infiniteAngles = previewDraft({ ...draft("perspective"), camera: { ...draft("perspective").camera, orbitDegrees: { yaw: Number.POSITIVE_INFINITY, pitch: Number.NEGATIVE_INFINITY }, fieldOfViewDegrees: Number.POSITIVE_INFINITY } });
+    expect(infiniteAngles.edges?.length).toBe(12);
+    expect(Number.isFinite(infiniteAngles.facing.vector.x) && Number.isFinite(infiniteAngles.facing.vector.y)).toBe(true);
+    const collapsed = previewDraft({ ...draft("perspective"), cube: { ...draft("perspective").cube, size: 0 } });
+    expect(collapsed.edges).toBeUndefined();
+    expect(collapsed.warnings.find((w) => w.id === "unprojectable")?.active).toBe(true);
+    expect(Math.hypot(collapsed.facing.vector.x, collapsed.facing.vector.y, collapsed.facing.depth)).toBeCloseTo(1);
   });
 });
 
