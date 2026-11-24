@@ -1,6 +1,6 @@
 # Project Transcendence — Cube Challenge Multiplayer
 
-<!-- DOC_META: status=review version=2 -->
+<!-- DOC_META: status=review version=3 -->
 <!-- DOC_SYNC: Review after changes to project scope, architecture, gameplay, stack, protocols, deployment, or directory ownership. -->
 
 ## 1. Project vision
@@ -70,7 +70,7 @@ flowchart LR
     end
 
     subgraph Edge["Deployment edge"]
-        Caddy["Caddy\nHTTPS / WSS"]
+        Caddy["Caddy\nlocal HTTPS / WSS"]
     end
 
     subgraph Server["NestJS backend (srcs/backend)"]
@@ -141,6 +141,36 @@ the winner.
 - `dev-tools/`: shared repository verification tools such as
   `dev-tools/doc-check.sh`.
 - `setup/` and `build/`: Docker/Podman configuration.
+
+## Implementation checkpoint — November 17, 2026
+
+The local creator and solo tools remain available. A separate Backend practice
+screen exercises a persisted single-participant round: development session,
+filtered prompt, frozen submission, PostgreSQL job, worker evaluation, and
+HTTP-polled result. The Prisma migrations and account/room flow are implemented. See
+[the backend contribution](backend-contribution.md) and
+[operations](../../setup/README.md) for setup and responsibilities.
+
+A Multiplayer screen now supports email/password registration, login/logout,
+rooms for 1–4 players, ready state, host-controlled start, synchronized prompts,
+and authenticated WebSocket snapshots/results with reconnect recovery. Accounts
+and room data are covered by a second additive migration. The current game uses
+one seeded challenge. The base setup/compose.yaml now starts the built frontend,
+Caddy, API, scoring worker and PostgreSQL with one command, applying migrations
+and seed before the API starts. Only the frontend port is published; API/database
+ports are internal unless the optional host-development override is used.
+
+The default browser address is https://localhost:8443. A host can explicitly bind
+the frontend to its LAN interface and allow the actual browser origin through
+.env. Peers use that one host and database. Public internet hosting is deferred. Caddy now issues local certificates from a
+persistent internal CA and terminates HTTPS/WSS. Every player device must trust
+that CA. SITE_HOST selects the certificate address; APP_ORIGIN matches the HTTPS
+browser address. API/database transport stays inside the Docker network. The
+default API runs in production mode with Secure cookies and guests disabled.
+The global footer exposes /privacy and /terms, rendered from the repository legal
+Markdown documents; their operator review remains open.
+<!-- DOC_TODO: OVERVIEW_LOCAL_TLS — verify trusted HTTPS/WSS on every school evaluation device before claiming secure-connection compliance. -->
+<!-- DOC_TODO: OVERVIEW_RELEASE_VERIFICATION — complete manual browser and separate-machine tests, evaluation-module review, legal policy review and local TLS acceptance before claiming a finished deliverable. -->
 
 ## 5. First vertical slice
 

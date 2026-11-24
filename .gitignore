@@ -9,6 +9,9 @@ dist/
 coverage/
 *.log
 
+# Exported local CA certificate (never export the CA private key)
+setup/local-ca.crt
+
 # Local database data and editor/OS state
 postgres-data/
 .DS_Store

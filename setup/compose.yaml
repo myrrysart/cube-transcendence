@@ -1,16 +1,16 @@
 name: transcendence
 
-# Database-only development baseline. Application services are deliberately
-# absent until their owners add reviewed Dockerfiles and health checks.
+x-database-environment: &database-environment
+  DATABASE_URL: postgresql://${POSTGRES_USER:?set POSTGRES_USER in .env}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:?set POSTGRES_DB in .env}?schema=public
+
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
-    ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -19,5 +19,70 @@ services:
       timeout: 5s
       retries: 10
 
+  migrate:
+    build:
+      context: ..
+      dockerfile: setup/backend.Dockerfile
+    image: cube-backend:local
+    environment: *database-environment
+    command: ["sh", "-c", "npm run db:migrate && npm run db:seed"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    image: cube-backend:local
+    pull_policy: never
+    init: true
+    restart: unless-stopped
+    environment:
+      <<: *database-environment
+      APP_HOST: 0.0.0.0
+      APP_PORT: 3000
+      APP_ORIGIN: ${APP_ORIGIN:-https://localhost:8443}
+      ENABLE_DEV_SESSION: "false"
+      NODE_ENV: production
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/ready').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  worker:
+    image: cube-backend:local
+    pull_policy: never
+    init: true
+    restart: unless-stopped
+    environment: *database-environment
+    command: ["npm", "run", "worker"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: setup/frontend.Dockerfile
+    image: cube-frontend:local
+    restart: unless-stopped
+    environment:
+      SITE_HOST: ${SITE_HOST:-localhost}
+    ports:
+      - "${WEB_BIND_ADDRESS:-127.0.0.1}:${WEB_PORT:-8443}:8443"
+    volumes:
+      - caddy-data:/data
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:8080/api/ready"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
 volumes:
   postgres-data:
+  caddy-data:

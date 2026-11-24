@@ -79,7 +79,7 @@ test('accounts, four-player rooms and authenticated live result recovery', { tim
   const participating = players.filter(player => members.some(member => member.userId === player.account.id));
   const excluded = players.find(player => !members.some(member => member.userId === player.account.id))!;
   assert.equal((await call(`/rooms/${room.roomId}`, excluded.cookie)).status, 404);
-  const origin = process.env.APP_ORIGIN ?? 'http://127.0.0.1:5173';
+  const origin = process.env.APP_ORIGIN?.split(',')[0].trim() ?? 'http://127.0.0.1:5173';
   const live = (player: typeof players[number]) => {
     const state = { last: undefined as RoomView | undefined };
     const socket = new WebSocket(`${base.replace('http:', 'ws:')}/api/events?roomId=${room.roomId}`, { headers: { Cookie: player.cookie, Origin: origin } });
