@@ -1,40 +1,12 @@
-# Merge with compose.yaml for local development. Frontend runs on the host.
+# Optional host-development overrides; the default stack needs only compose.yaml.
 services:
-  migrate:
-    build:
-      context: ..
-      dockerfile: setup/backend.Dockerfile
-    image: cube-backend:development
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:?required}:${POSTGRES_PASSWORD:?required}@db:5432/${POSTGRES_DB:?required}?schema=public
-    command: ["sh", "-c", "npm run db:migrate && npm run db:seed"]
-    depends_on:
-      db:
-        condition: service_healthy
-  api:
-    image: cube-backend:development
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:?required}:${POSTGRES_PASSWORD:?required}@db:5432/${POSTGRES_DB:?required}?schema=public
-      APP_HOST: 0.0.0.0
-      APP_PORT: 3000
-      APP_ORIGIN: http://127.0.0.1:5173
-      ENABLE_DEV_SESSION: "true"
-      NODE_ENV: development
+  db:
     ports:
-      - "127.0.0.1:3000:3000"
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
-    healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/ready').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-  worker:
-    image: cube-backend:development
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+  api:
+    ports:
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:?required}:${POSTGRES_PASSWORD:?required}@db:5432/${POSTGRES_DB:?required}?schema=public
-    command: ["npm", "run", "worker"]
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
+      NODE_ENV: development
+      ENABLE_DEV_SESSION: ${ENABLE_DEV_SESSION:-false}
+      APP_ORIGIN: ${APP_ORIGIN:-https://localhost:8443},http://localhost:5173,http://127.0.0.1:5173

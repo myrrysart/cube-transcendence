@@ -1,6 +1,6 @@
 # Backend and infrastructure contribution
 
-<!-- DOC_META: status=review version=1 -->
+<!-- DOC_META: status=review version=2 -->
 <!-- DOC_SYNC: Review after changes to backend, database, room protocol or local startup. -->
 
 I added the backend and database flow around the existing drawing engine.
@@ -29,20 +29,18 @@ Unsubmitted browser strokes are not saved.
 
 ## Run locally
 
-Use Docker Compose, Node.js 24 and npm. Copy .env.example to an untracked .env and
+Use Git and Docker Compose on the host; Node.js 24 and Bun run inside the build images. Copy .env.example to an untracked .env and
 replace the example database password. Use a URL-safe password in the Compose
 connection-string example. This setup is local development, not public deployment.
 
 From the repository root:
 
 ```console
-docker compose --env-file .env -f setup/compose.yaml -f setup/compose.backend.yaml up -d --build --wait
-cd srcs/frontend
-npm install --package-lock=false
-node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5173 --strictPort
+docker compose --env-file .env -f setup/compose.yaml up -d --build --wait
 ```
 
-Open http://127.0.0.1:5173 and select Multiplayer. Use separate browser profiles
+Trust the exported local CA as described in the root README, then open https://localhost:8443 and select Multiplayer. The root README explains
+how to bind one host to the school LAN and configure allowed browser origins. Use separate browser profiles
 or normal/private contexts for independent accounts. Create a room, share its ID,
 mark players ready, then let the host start. The demonstration uses one seeded
 challenge and a 15-second drawing interval.
@@ -58,6 +56,10 @@ round passed. The Node.js 24 image and compiled integration tests also passed.
 <!-- DOC_TODO: CONTRIBUTION_BROWSER_ACCEPTANCE — verify Chrome drawing, touch, layout, keyboard controls and separate-machine reconnect before accepting the feature for release. -->
 <!-- DOC_TODO: CONTRIBUTION_PUBLIC_RELEASE — complete account recovery/verification, retention, worker monitoring/retry policy, shared rate limits and HTTPS/WSS deployment review before public release. -->
 
-Public deployment is deferred. Presence currently targets one API instance.
+Public deployment is deferred. The complete local stack now runs in containers
+with a Caddy HTTPS/WSS frontend, persisted local CA and Secure session cookies.
+Legal footer pages describe actual local data handling. Device trust and policy
+review remain evaluation acceptance tasks. Presence
+currently targets one API instance.
 The frontend still includes the original browser-only creator and solo tools.
 No evaluation module points are claimed by this contribution summary.

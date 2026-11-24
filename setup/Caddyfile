@@ -1,0 +1,31 @@
+{
+	default_sni {$SITE_HOST:localhost}
+	skip_install_trust
+	admin off
+	persist_config off
+	auto_https disable_redirects
+}
+
+https://{$SITE_HOST:localhost}:8443 {
+	tls internal
+	encode zstd gzip
+
+	@api path /api /api/*
+	handle @api {
+		reverse_proxy api:3000
+	}
+
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}
+
+# Container-only readiness listener; never published on the host.
+http://127.0.0.1:8080 {
+	handle /api/ready {
+		reverse_proxy api:3000
+	}
+	respond 404
+}

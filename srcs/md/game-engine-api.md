@@ -72,11 +72,12 @@ The backend enforces these input limits:
 
 ## Closed-round scoring job
 
-When a round reaches its server-controlled end time, the backend records one
-idempotent, pending scoring job identified by the round. NestJS worker
+The backend records one idempotent scoring job identified by the round. It may
+create that pending job atomically with the round, but the job becomes eligible
+only at the server-controlled end time. NestJS worker
 processes claim pending jobs from PostgreSQL, build the closed-round engine
-input, persist the result, and publish it to the room. A retry must not create
-or publish a second result for the same round.
+input, persist the result, and publish it to the room. A retry may repeat deterministic evaluation after an interrupted attempt, but
+must not create or publish a second official result for the same round.
 
 This PostgreSQL-backed job queue is the initial scaling design: HTTP and
 WebSocket handlers do not run the evaluator themselves, so workers may scale
@@ -223,3 +224,25 @@ with public player labels, and publishes the result after the round closes.
 Every participant receives the challenge geometry, all players' final drawings,
 their point feedback, scores, ranks, and any backend-decided timeout status.
 No live stroke data is sent during an active round.
+
+
+## Local backend implementation checkpoint
+
+The local single-participant backend implements the version 2 payload boundary,
+persists the first accepted submission, and evaluates closed rounds through a
+separate PostgreSQL job worker. Backend practice retrieves persisted results by HTTP polling. Multiplayer
+publishes changed authenticated room snapshots over WebSocket, including the
+committed result after closure. Reconnect recovers the same result; the round ID
+is its stable identity, so repeated delivery is not a second official result. The [backend contribution summary](backend-contribution.md) describes ownership
+and remaining acceptance work; [operations](../../setup/README.md) documents setup
+and verification commands.
+
+
+## Container transport
+
+The local container entry point serves the compiled frontend and forwards /api
+HTTPS requests and /api/events WSS upgrades to NestJS without changing the
+engine payloads. Both use the browser's origin; local-network hosts must include
+their chosen browser URL in APP_ORIGIN. See [startup instructions](../../README.md)
+for local CA export/trust and HTTPS/WSS setup. Caddy terminates browser TLS;
+internal proxy transport and engine payloads remain unchanged.
